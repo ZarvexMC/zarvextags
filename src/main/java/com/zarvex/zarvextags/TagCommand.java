@@ -1,5 +1,7 @@
 package com.zarvex.zarvextags;
 
+import static com.zarvex.zarvextags.ZarvexTags.getColoredPrefix;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -21,7 +23,7 @@ public class TagCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Este comando só pode ser executado por jogadores.");
+            sender.sendMessage(getColoredPrefix() + ChatColor.RED + "Este comando só pode ser executado por jogadores.");
             return true;
         }
 
@@ -31,11 +33,11 @@ public class TagCommand implements CommandExecutor {
             List<String> playerTags = plugin.getDatabaseManager().getPlayerTags(player.getUniqueId());
 
             if (playerTags.isEmpty()) {
-                player.sendMessage(ChatColor.RED + "Você não possui nenhuma tag.");
+                player.sendMessage(getColoredPrefix() + ChatColor.RED + "Você não possui nenhuma tag.");
                 return true;
             }
 
-            player.sendMessage(ChatColor.GREEN + "Suas tags:");
+            player.sendMessage(getColoredPrefix() + ChatColor.LIGHT_PURPLE + "Suas tags:");
             for (String tagId : playerTags) {
                 String displayName = plugin.getTags().get(tagId);
                 if (displayName != null) {
@@ -52,17 +54,17 @@ public class TagCommand implements CommandExecutor {
             List<String> playerTags = plugin.getDatabaseManager().getPlayerTags(player.getUniqueId());
 
             if (!playerTags.contains(tagId)) {
-                player.sendMessage(ChatColor.RED + "Você não possui a tag '" + tagId + "'.");
+                player.sendMessage(getColoredPrefix() + ChatColor.RED + "Você não possui a tag '" + tagId + "'.");
                 return true;
             }
 
             plugin.getDatabaseManager().setSelectedTag(player.getUniqueId(), tagId);
             String displayName = plugin.getTags().get(tagId);
-            player.sendMessage(ChatColor.GREEN + "Sua tag foi definida para: " + ChatColor.translateAlternateColorCodes('&', displayName));
+            player.sendMessage(getColoredPrefix() + ChatColor.WHITE + "Sua tag foi definida para: " + ChatColor.translateAlternateColorCodes('&', displayName));
             return true;
         }
 
-        player.sendMessage(ChatColor.RED + "Uso correto: /tag <id_da_tag> ou /tag");
+    player.sendMessage(getColoredPrefix() + ChatColor.RED + "Uso correto: /tag <id_da_tag> ou /tag");
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.zarvex.zarvextags;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.zarvex.zarvextags.TagModCommand;
@@ -9,6 +10,15 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class ZarvexTags extends JavaPlugin {
+
+    public static final String PREFIX = "&d&lZARVEX &6&l➜ &f";
+
+    /**
+     * Retorna o prefixo já formatado com as cores do Minecraft.
+     */
+    public static String getColoredPrefix() {
+        return ChatColor.translateAlternateColorCodes('&', PREFIX);
+    }
 
     private final Map<String, String> tags = new HashMap<>();
     private DatabaseManager databaseManager;
@@ -35,7 +45,7 @@ public final class ZarvexTags extends JavaPlugin {
         }
 
         getCommand("tag").setExecutor(new TagCommand(this));
-        getCommand("tagsreload").setExecutor(new ReloadCommand(this));
+        getCommand("tagreload").setExecutor(new ReloadCommand(this));
         getCommand("tagmod").setExecutor(new TagModCommand(this, databaseManager));
         new TagsExpansion(this).register();
 

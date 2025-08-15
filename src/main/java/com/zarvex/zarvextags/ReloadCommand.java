@@ -1,5 +1,7 @@
 package com.zarvex.zarvextags;
 
+import static com.zarvex.zarvextags.ZarvexTags.getColoredPrefix;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,16 +17,17 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("zarvextags.reload")) {
-            sender.sendMessage(ChatColor.RED + "Você não tem permissão para usar este comando.");
+        if (command.getName().equalsIgnoreCase("tagreload")) {
+            if (sender.hasPermission("zarvextags.reload")) {
+                plugin.reloadConfig();
+                plugin.loadTags();
+                sender.sendMessage(getColoredPrefix() + ChatColor.GREEN + "As tags foram recarregadas com sucesso!");
+                plugin.getLogger().info("Tags recarregadas por " + sender.getName());
+            } else {
+                sender.sendMessage(getColoredPrefix() + ChatColor.RED + "Você não tem permissão para usar este comando.");
+            }
             return true;
         }
-
-        plugin.reloadConfig();
-        plugin.loadTags();
-        sender.sendMessage(ChatColor.GREEN + "As tags foram recarregadas com sucesso!");
-        plugin.getLogger().info("Tags recarregadas por " + sender.getName());
-
-        return true;
+        return false;
     }
 }

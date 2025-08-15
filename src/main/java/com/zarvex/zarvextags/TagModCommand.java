@@ -1,5 +1,7 @@
 package com.zarvex.zarvextags;
 
+import static com.zarvex.zarvextags.ZarvexTags.getColoredPrefix;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -20,48 +22,56 @@ public class TagModCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Este comando só pode ser executado por um jogador.");
+            sender.sendMessage(getColoredPrefix() + "Este comando só pode ser executado por um jogador.");
             return true;
         }
 
-        Player player = (Player) sender;
-
-        if (!player.hasPermission("zarvextags.tagmod")) {
-            player.sendMessage("§cVocê não tem permissão para usar este comando.");
+        if (!sender.hasPermission("zarvextags.admin")) {
+            sender.sendMessage(getColoredPrefix() + "§cVocê não tem permissão para usar este comando.");
             return true;
         }
 
-        if (args.length < 2) {
-            player.sendMessage("§cUso correto: /tagmod <jogador> <tag>");
+        if (args.length < 3) {
+            sender.sendMessage(getColoredPrefix() + "§cUso correto: /tagmod <add|remove> <jogador> <tag>");
             return true;
         }
 
-        String targetPlayerName = args[0];
-        String tagId = args[1];
+        String subCommand = args[0].toLowerCase();
+        String targetPlayerName = args[1];
+        String tagId = args[2];
 
         OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
-        if (targetPlayer == null || !targetPlayer.hasPlayedBefore() && !targetPlayer.isOnline()) {
-            player.sendMessage("§cJogador não encontrado ou nunca jogou no servidor.");
+        if (targetPlayer == null || (!targetPlayer.hasPlayedBefore() && !targetPlayer.isOnline())) {
+            sender.sendMessage(getColoredPrefix() + "§cJogador '" + targetPlayerName + "' não encontrado ou nunca jogou no servidor.");
             return true;
         }
 
         if (!plugin.getConfig().getConfigurationSection("tags").contains(tagId)) {
-            player.sendMessage("§cTag '" + tagId + "' não encontrada na configuração.");
+            sender.sendMessage(getColoredPrefix() + "§cTag '" + tagId + "' não encontrada na configuração.");
             return true;
         }
 
-        // Add the tag to the player in the database
-        databaseManager.addPlayerTag(targetPlayer.getUniqueId(), tagId);
-        player.sendMessage("§aTag '" + tagId + "' adicionada ao jogador '" + targetPlayerName + "' com sucesso!");
-
-        // If the target player is online, update their tags
-        if (targetPlayer.isOnline()) {
-            Player onlineTarget = targetPlayer.getPlayer();
-            // You might want to send a message to the target player as well
-            onlineTarget.sendMessage("§aVocê recebeu a tag '" + plugin.getConfig().getString("tags." + tagId + ".displayname") + "§a'!");
-            // Re-apply placeholders if necessary (e.g., if using PlaceholderAPI)
-            // PlaceholderAPI.setPlaceholders(onlineTarget, "%zarvextags_tag%"); // Example
+        switch (subCommand) {
+            case "add":
+                databaseManager.addPlayerTag(targetPlayer.getUniqueId(), tagId);
+                sender.sendMessage(getColoredPrefix() + "§aTag '" + tagId + "' adicionada ao jogador '" + targetPlayerName + "' com sucesso!");
+                if (targetPlayer.isOnline()) {
+                    Player onlineTarget = targetPlayer.getPlayer();
+                    onlineTarget.sendMessage(getColoredPrefix() + "§aVocê recebeu a tag '" + plugin.getConfig().getString("tags." + tagId + ".displayname") + "§a'!");
+                }
+                break;
+            case "remove":
+                databaseManager.removePlayerTag(targetPlayer.getUniqueId(), tagId);
+                sender.sendMessage(getColoredPrefix() + "§aTag '" + tagId + "' removida do jogador '" + targetPlayerName + "' com sucesso!");
+                if (targetPlayer.isOnline()) {
+                    Player onlineTarget = targetPlayer.getPlayer();
+                    onlineTarget.sendMessage(getColoredPrefix() + "§cSua tag '" + plugin.getConfig().getString("tags." + tagId + ".displayname") + "§c' foi removida!");
+                }
+                break;
+            default:
+                sender.sendMessage(getColoredPrefix() + "§cUso correto: /tagmod <add|remove> <jogador> <tag>");
+                break;
         }
 
         return true;

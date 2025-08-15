@@ -9,7 +9,7 @@ commands:
     description: Define a tag de um jogador.
     usage: /<command> <jogador> <tag>
     permission: zarvextags.tag
-  tagsreload:
+  tagreload:
     description: Recarrega as tags do arquivo de configuração.
     permission: zarvextags.reload
   tagmod:
