@@ -1,3 +1,6 @@
 com/zarvex/zarvextags/ZarvexTags.class
 com/zarvex/zarvextags/TagsExpansion.class
+com/zarvex/zarvextags/DatabaseManager.class
 com/zarvex/zarvextags/TagCommand.class
+com/zarvex/zarvextags/ReloadCommand.class
+com/zarvex/zarvextags/TagModCommand.class
