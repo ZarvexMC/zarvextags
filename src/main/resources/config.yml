@@ -12,3 +12,10 @@ tags:
   membro:
     name: 'Membro'
     displayname: '&7Membro'
+
+database:
+  host: "localhost"
+  port: 3306
+  database: "zarvextags"
+  username: "root"
+  password: ""
