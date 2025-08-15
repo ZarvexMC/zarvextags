@@ -35,6 +35,7 @@ public final class ZarvexTags extends JavaPlugin {
         loadPlayerData();
 
         getCommand("tag").setExecutor(new TagCommand(this));
+        getCommand("tagsreload").setExecutor(new ReloadCommand(this));
         new TagsExpansion(this).register();
 
         getLogger().info("ZarvexTags habilitado com sucesso!");
