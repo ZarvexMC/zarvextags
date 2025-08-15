@@ -7,25 +7,30 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class TagCommand implements CommandExecutor {
 
     private final ZarvexTags plugin;
+    private final Logger logger;
 
     public TagCommand(ZarvexTags plugin) {
         this.plugin = plugin;
+        this.logger = plugin.getLogger();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        logger.info("Comando /tag executado por " + sender.getName() + " com argumentos: " + String.join(" ", args));
+
         if (!sender.hasPermission("zarvextags.tag")) {
             sender.sendMessage(ChatColor.RED + "Você não tem permissão para usar este comando.");
             return true;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Uso correto: /tag <jogador> <tag>");
+            sender.sendMessage(ChatColor.RED + "Uso correto: /tag <jogador> <id_da_tag>");
+            sender.sendMessage(ChatColor.GRAY + "Para remover a tag de um jogador, use: /tag <jogador> remover");
             return true;
         }
 
@@ -35,12 +40,26 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
 
-        String tag = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-        String formattedTag = ChatColor.translateAlternateColorCodes('&', tag);
+        String tagId = args[1].toLowerCase();
 
-        plugin.getPlayerTags().put(target.getUniqueId(), formattedTag);
+        if (tagId.equalsIgnoreCase("remover")) {
+            plugin.setPlayerTag(target.getUniqueId(), null);
+            sender.sendMessage(ChatColor.GREEN + "A tag do jogador " + target.getName() + " foi removida.");
+            logger.info("Tag de " + target.getName() + " removida por " + sender.getName());
+            return true;
+        }
 
-        sender.sendMessage(ChatColor.GREEN + "A tag do jogador " + target.getName() + " foi definida para: " + formattedTag);
+        if (!plugin.getTags().containsKey(tagId)) {
+            sender.sendMessage(ChatColor.RED + "A tag '" + tagId + "' não existe.");
+            logger.warning("Tentativa de usar tag inexistente '" + tagId + "' por " + sender.getName());
+            return true;
+        }
+
+        plugin.setPlayerTag(target.getUniqueId(), tagId);
+
+        String displayName = plugin.getTags().get(tagId);
+        sender.sendMessage(ChatColor.GREEN + "A tag do jogador " + target.getName() + " foi definida para: " + ChatColor.translateAlternateColorCodes('&', displayName));
+        logger.info("Tag de " + target.getName() + " definida para '" + tagId + "' por " + sender.getName());
         return true;
     }
 }

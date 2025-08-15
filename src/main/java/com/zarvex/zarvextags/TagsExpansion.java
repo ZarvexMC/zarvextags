@@ -1,6 +1,7 @@
 package com.zarvex.zarvextags;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,22 +15,22 @@ public class TagsExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "zarvextags-tag";
+        return "zarvextags";
     }
 
     @Override
     public @NotNull String getAuthor() {
-        return "Felipe";
+        return plugin.getDescription().getAuthors().toString();
     }
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0";
+        return plugin.getDescription().getVersion();
     }
 
     @Override
     public boolean persist() {
-        return true; // Indica que a expansão deve ser salva no disco
+        return true;
     }
 
     @Override
@@ -38,7 +39,23 @@ public class TagsExpansion extends PlaceholderExpansion {
             return "";
         }
 
-        // Como o identificador já é a tag completa, não precisamos verificar os parâmetros.
-        return plugin.getPlayerTags().getOrDefault(player.getUniqueId(), "");
+        // %zarvextags_tag%
+        if (params.equalsIgnoreCase("tag")) {
+            String tagId = plugin.getPlayerTags().get(player.getUniqueId());
+
+            if (tagId == null) {
+                return ""; // Sem tag
+            }
+
+            String displayName = plugin.getTags().get(tagId);
+
+            if (displayName == null) {
+                return ""; // Tag sem displayname
+            }
+
+            return ChatColor.translateAlternateColorCodes('&', displayName);
+        }
+
+        return null;
     }
 }

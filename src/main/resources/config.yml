@@ -1,0 +1,14 @@
+# Configuração de Tags para o plugin ZarvexTags
+#
+# Aqui você pode definir todas as tags que estarão disponíveis no servidor.
+# A "chave" da tag (ex: "fundador") é o que você usará no comando /tag.
+#
+# name: O nome descritivo da tag.
+# displayname: O texto que será exibido no placeholder, com suporte a códigos de cores (&).
+tags:
+  fundador:
+    name: 'Fundador'
+    displayname: '&4&lFUNDADOR'
+  membro:
+    name: 'Membro'
+    displayname: '&7Membro'
