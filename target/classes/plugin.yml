@@ -1,0 +1,11 @@
+name: ZarvexTags
+version: 1.0
+main: com.zarvex.zarvextags.ZarvexTags
+author: Felipe
+depend: [PlaceholderAPI]
+
+commands:
+  tag:
+    description: Define a tag de um jogador.
+    usage: /<command> <jogador> <tag>
+    permission: zarvextags.tag
