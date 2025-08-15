@@ -12,3 +12,7 @@ commands:
   tagsreload:
     description: Recarrega as tags do arquivo de configuração.
     permission: zarvextags.reload
+  tagmod:
+    description: Adiciona uma tag a um jogador.
+    usage: /<command> <jogador> <tag>
+    permission: zarvextags.tagmod

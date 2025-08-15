@@ -16,7 +16,7 @@ public class DatabaseManager {
         this.plugin = plugin;
     }
 
-    public void connect() {
+    public boolean connect() {
         FileConfiguration config = plugin.getConfig();
         String host = config.getString("database.host");
         int port = config.getInt("database.port");
@@ -25,11 +25,20 @@ public class DatabaseManager {
         String password = config.getString("database.password");
 
         try {
+            // Explicitly load the MariaDB driver
+            try {
+                Class.forName("com.zarvex.zarvextags.libs.mariadb.Driver"); // Use the relocated package
+            } catch (ClassNotFoundException e) {
+                plugin.getLogger().severe("MariaDB JDBC Driver not found: " + e.getMessage());
+                return false;
+            }
             connection = DriverManager.getConnection("jdbc:mariadb://" + host + ":" + port + "/" + database, username, password);
             plugin.getLogger().info("Conexão com o banco de dados estabelecida com sucesso!");
             createTables();
+            return true;
         } catch (SQLException e) {
             plugin.getLogger().severe("Não foi possível conectar ao banco de dados: " + e.getMessage());
+            return false;
         }
     }
 

@@ -2,6 +2,7 @@ package com.zarvex.zarvextags;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.zarvex.zarvextags.TagModCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +28,15 @@ public final class ZarvexTags extends JavaPlugin {
 
         // Configuração do banco de dados
         databaseManager = new DatabaseManager(this);
-        databaseManager.connect();
+        if (!databaseManager.connect()) {
+            getLogger().severe("Falha ao conectar no banco de dados. O plugin será desabilitado.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         getCommand("tag").setExecutor(new TagCommand(this));
         getCommand("tagsreload").setExecutor(new ReloadCommand(this));
+        getCommand("tagmod").setExecutor(new TagModCommand(this, databaseManager));
         new TagsExpansion(this).register();
 
         getLogger().info("ZarvexTags habilitado com sucesso!");
