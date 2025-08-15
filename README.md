@@ -1,5 +1,6 @@
 # Zarvex Tags
-# to-do
+
+## to-do
  - geração de arquivo config.yml para configurações básicas e criação de tags
 - Integração com banco de dados
 - Comandos de funcionalidades (Administrativas/Players)
