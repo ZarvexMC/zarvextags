@@ -2,7 +2,7 @@ name: ZarvexTags
 version: 1.0
 main: com.zarvex.zarvextags.ZarvexTags
 author: Felipe
-depend: [PlaceholderAPI]
+depend: [PlaceholderAPI, LuckPerms]
 
 commands:
   tag:

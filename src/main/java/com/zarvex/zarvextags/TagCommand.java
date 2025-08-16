@@ -2,6 +2,8 @@ package com.zarvex.zarvextags;
 
 import static com.zarvex.zarvextags.ZarvexTags.getColoredPrefix;
 
+import com.zarvex.zarvextags.LuckPermsUtil;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -59,6 +61,8 @@ public class TagCommand implements CommandExecutor {
             }
 
             plugin.getDatabaseManager().setSelectedTag(player.getUniqueId(), tagId);
+            // LuckPerms: Atualiza permissão da tag
+            LuckPermsUtil.setTagPermission(player.getUniqueId(), tagId);
             String displayName = plugin.getTags().get(tagId);
             player.sendMessage(getColoredPrefix() + ChatColor.WHITE + "Sua tag foi definida para: " + ChatColor.translateAlternateColorCodes('&', displayName));
             return true;

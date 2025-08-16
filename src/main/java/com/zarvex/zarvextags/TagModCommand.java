@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
 
 public class TagModCommand implements CommandExecutor {
 
@@ -53,22 +54,28 @@ public class TagModCommand implements CommandExecutor {
         }
 
         switch (subCommand) {
-            case "add":
+            case "add": {
                 databaseManager.addPlayerTag(targetPlayer.getUniqueId(), tagId);
                 sender.sendMessage(getColoredPrefix() + "§aTag '" + tagId + "' adicionada ao jogador '" + targetPlayerName + "' com sucesso!");
                 if (targetPlayer.isOnline()) {
                     Player onlineTarget = targetPlayer.getPlayer();
-                    onlineTarget.sendMessage(getColoredPrefix() + "§aVocê recebeu a tag '" + plugin.getConfig().getString("tags." + tagId + ".displayname") + "§a'!");
+                    String displayName = plugin.getConfig().getString("tags." + tagId + ".displayname");
+                    if (displayName == null) displayName = tagId;
+                    onlineTarget.sendMessage(getColoredPrefix() + "§aVocê recebeu a tag '" + ChatColor.translateAlternateColorCodes('&', displayName) + "§a'!");
                 }
                 break;
-            case "remove":
+            }
+            case "remove": {
                 databaseManager.removePlayerTag(targetPlayer.getUniqueId(), tagId);
                 sender.sendMessage(getColoredPrefix() + "§aTag '" + tagId + "' removida do jogador '" + targetPlayerName + "' com sucesso!");
                 if (targetPlayer.isOnline()) {
                     Player onlineTarget = targetPlayer.getPlayer();
-                    onlineTarget.sendMessage(getColoredPrefix() + "§cSua tag '" + plugin.getConfig().getString("tags." + tagId + ".displayname") + "§c' foi removida!");
+                    String displayName = plugin.getConfig().getString("tags." + tagId + ".displayname");
+                    if (displayName == null) displayName = tagId;
+                    onlineTarget.sendMessage(getColoredPrefix() + "§cSua tag '" + ChatColor.translateAlternateColorCodes('&', displayName) + "§c' foi removida!");
                 }
                 break;
+            }
             default:
                 sender.sendMessage(getColoredPrefix() + "§cUso correto: /tagmod <add|remove> <jogador> <tag>");
                 break;
