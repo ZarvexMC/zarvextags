@@ -2,7 +2,7 @@
 
 ## to-do
 - [x] geração de arquivo config.yml para configurações básicas e criação de tags
-- [ ] Integração com banco de dados
+- [x] Integração com banco de dados
 - [x] Comandos de funcionalidades (Administrativas/Players)
 - [x] Permissões Administrativas
 - [x] Salvar Tag equipada (reaplicar a ultima tag q o jogador estava utilizando quando saiu do servidor)
